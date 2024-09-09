@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mini.please_mini_pjt.hosinfo.dao.HosMapper">
+
+
+
+    <!-- findAllRow --> 
+
+    <select id="findAllRow" resultType="com.example.mini.please_mini_pjt.hosinfo.domain.HosResponseDTO">
+    SELECT ID, DUTYNAME, HPID, DUTYADDR, DUTYTEL FROM HOS_INFO;
+    </select>
+    
+
+    <!-- insertRow --> 
+
+    <insert id="insertRow" parameterType="com.example.mini.please_mini_pjt.hosinfo.domain.HosRequestsDTO">
+    INSERT INTO HOS_INFO(DUTYNAME, HPID, DUTYADDR, DUTYTEL) VALUES( #{dutyname}, #{hpid}, #{dutyaddr}, #{dutytel});
+    </insert>    
+
+    <!-- deleteRow --> 
+
+    <delete id="deleteRow" parameterType="java.util.HashMap">
+    DELETE FROM  HOS_INFO WHERE ID = #{id}
+    </delete>    </mapper>

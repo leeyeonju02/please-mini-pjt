@@ -1,13 +1,38 @@
 package com.example.mini.please_mini_pjt.hosinfo.service;
 
-import lombok.Data;
+import java.util.List;
+import java.util.Map;
 
-@Data
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+import com.example.mini.please_mini_pjt.hosinfo.dao.HosMapper;
+import com.example.mini.please_mini_pjt.hosinfo.domain.HosRequestsDTO;
+import com.example.mini.please_mini_pjt.hosinfo.domain.HosResponseDTO;
+
+@Service
 public class HosinfoService {
-    private int id; 
-    private String dutyname;
-    private String hpid;
-    private String dutyaddr;
-    private String dutyTel1;
+    @Autowired
+    private HosMapper hosMapper;
+
+    public List<HosResponseDTO> findAll() {
+        System.out.println("debug >>> service All, " + hosMapper);
+        return hosMapper.findAllRow();
+    }
+
+    public void create(HosRequestsDTO params) {
+        System.out.println("debug >>> service create " + hosMapper);
+        hosMapper.insertRow(params);
+    }
+
+    public void delete(Map<String, Integer> map ) {
+        System.out.println("debug >>> service delete " + hosMapper);
+        hosMapper.deleteRow(map);
+    }
+
+  
+
+   
     
 }
