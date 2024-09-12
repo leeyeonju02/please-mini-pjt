@@ -5,17 +5,24 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.mini.please_mini_pjt.hosapi.service.HosApiService;
+
 import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api")
 public class HosApiController {
+    @Autowired
+    private HosApiService hosApiService;
+
 
     @Value("${openApi.serviceKey}")
     private String serviceKey;

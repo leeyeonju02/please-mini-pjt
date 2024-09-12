@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class HosApiRequestDTO {
-    
+    private String Q0;
+    private String Q1;
+    private String QT;
 }
