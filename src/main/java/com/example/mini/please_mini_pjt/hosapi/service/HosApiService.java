@@ -1,8 +1,10 @@
 package com.example.mini.please_mini_pjt.hosapi.service;
 
-
 import org.springframework.stereotype.Service;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -14,57 +16,43 @@ import java.util.List;
 @Service
 public class HosApiService {
 
-    // 기존에 String을 받던 부분을 Document로 수정
-    public List<HosItemDTO> parsingXml(Document document) {
-        List<HosItemDTO> hosItemList = new ArrayList<>();
-
+    // XML 문자열을 파싱하여 HosItemDTO 리스트로 변환
+    public List<HosItemDTO> parseXml(String xmlData) {
+        List<HosItemDTO> list = new ArrayList<>();
         try {
-            // <item> 태그 목록 가져오기
-            NodeList itemListNodes = document.getElementsByTagName("item");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new java.io.ByteArrayInputStream(xmlData.getBytes()));
 
-            // 각 <item> 태그를 순회하며 데이터 추출
-            for (int i = 0; i < itemListNodes.getLength(); i++) {
-                Node itemNode = itemListNodes.item(i);
-                NodeList childNodes = itemNode.getChildNodes();
+            NodeList items = doc.getElementsByTagName("item");
+            
+            // 각각의 <item> 노드를 순회하며 DTO로 변환
+            for (int i = 0; i < items.getLength(); i++) {
+                Node itemNode = items.item(i);
+                if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element itemElement = (Element) itemNode;
 
-                HosItemDTO hosItemDTO = new HosItemDTO();
+                    HosItemDTO dto = new HosItemDTO();
+                    dto.setDutyAddr(getTagValue("dutyAddr", itemElement));
+                    dto.setDutyDivName(getTagValue("dutyDivName", itemElement));
+                    dto.setDutyName(getTagValue("dutyName", itemElement));
+                    dto.setDutyTel1(getTagValue("dutyTel1", itemElement));
+                    dto.setHpid(getTagValue("hpid", itemElement));
+                    dto.setRnum(Integer.parseInt(getTagValue("rnum", itemElement)));
 
-                // 각 <item> 내의 자식 노드들 순회
-                for (int j = 0; j < childNodes.getLength(); j++) {
-                    Node childNode = childNodes.item(j);
-
-                    // 태그 이름에 따라 HosItemDTO에 값 설정
-                    switch (childNode.getNodeName()) {
-                        case "dutyAddr":
-                            hosItemDTO.setDutyAddr(childNode.getTextContent());
-                            break;
-                        case "dutyDivName":
-                            hosItemDTO.setDutyDivName(childNode.getTextContent());
-                            break;
-                        case "dutyName":
-                            hosItemDTO.setDutyName(childNode.getTextContent());
-                            break;
-                        case "dutyTel1":
-                            hosItemDTO.setDutyTel1(childNode.getTextContent());
-                            break;
-                        case "hpid":
-                            hosItemDTO.setHpid(childNode.getTextContent());
-                            break;
-                        case "rnum":
-                            hosItemDTO.setRnum(Integer.parseInt(childNode.getTextContent()));
-                            break;
-                        default:
-                            break;
-                    }
+                    list.add(dto);
                 }
-
-                // 리스트에 추가
-                hosItemList.add(hosItemDTO);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return list;
+    }
 
-        return hosItemList; // 변환된 데이터를 반환
+    // XML 노드에서 태그의 값을 추출하는 헬퍼 메소드
+    private String getTagValue(String tag, Element element) {
+        NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
+        Node node = (Node) nodeList.item(0);
+        return node.getNodeValue();
     }
 }

@@ -1,6 +1,8 @@
 package com.example.mini.please_mini_pjt.hosapi.domain;
 
+
 import lombok.Data;
+
 
 @Data
 public class HosItemDTO {
@@ -12,3 +14,6 @@ public class HosItemDTO {
     private int rnum; //일련번호
 
 }
+
+
+
