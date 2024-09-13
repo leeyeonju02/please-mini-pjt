@@ -5,8 +5,11 @@ import lombok.Data;
 @Data
 public class HosRequestsDTO {
     private int id; 
-    private String dutyname;
+    private String dutyName;
     private String hpid;
-    private String dutyaddr;
-    private String dutytel;
+    private String dutyAddr;
+    private String dutyTel1;
+    private String dutyDivName;
+    private int rnum;
+    
 }

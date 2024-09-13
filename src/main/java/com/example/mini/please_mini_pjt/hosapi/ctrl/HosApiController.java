@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.example.mini.please_mini_pjt.hosapi.domain.HosDetailDTO;
 import com.example.mini.please_mini_pjt.hosapi.domain.HosItemDTO;
 import com.example.mini.please_mini_pjt.hosapi.service.HosApiService;
 
@@ -39,10 +41,13 @@ public class HosApiController {
     @Value("${openApi.dataType}")
     private String dataType;
 
+    @Value("${openApi.callBackUrl2}")
+    private String callBackUrl2;
+
     @GetMapping("/Hosinfo")
-    public ResponseEntity<List<HosItemDTO>> getMethodName(@RequestParam(value = "Q0") String Q0,
-                                                @RequestParam(value = "Q1") String Q1,
-                                                @RequestParam(value = "QT") String QT) {
+    public ResponseEntity<List<HosItemDTO>> getMethodName(@RequestParam(value = "Q0", required = false) String Q0,
+                                                @RequestParam(value = "Q1", required = false) String Q1,
+                                                @RequestParam(value = "QT", required = false) String QT) {
         System.out.println("client end point : /api/Hosinfo");
         System.out.println("serviceKey = " + serviceKey);
         System.out.println("callBackUrl = " + callBackUrl);
@@ -92,6 +97,54 @@ public class HosApiController {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
        
+    }
+    
+    @GetMapping("/Hosdetail")
+    public ResponseEntity<List<HosDetailDTO>> getDetail(@RequestParam(value = "hpid", required = false) String hpid) {
+        System.out.println("client end point : /api/Hosdetail");
+        System.out.println("serviceKey = " + serviceKey);
+        System.out.println("callBackurl = " + callBackUrl2); 
+        System.out.println("params hpid = " + hpid);
+
+        HttpURLConnection http = null;
+        InputStream stream = null;
+        String result = null; 
+        List<HosDetailDTO> list = null;
+
+        try {
+            // 한글 파라미터 인코딩 처리
+            //String encodedQ0 = URLEncoder.encode(hpid, StandardCharsets.UTF_8.toString());
+
+            // 이미 인코딩된 serviceKey를 다시 인코딩하지 않음
+            String requestURL = callBackUrl2 +
+                                "?serviceKey=" + serviceKey +
+                                "&HPID=" + hpid;
+                     
+
+            System.out.println("url check = " + requestURL);
+
+
+            //수정본 
+            URL url = new URL(requestURL);
+            http = (HttpURLConnection)url.openConnection();
+            System.out.println("http connection = " + http);
+            int code = http.getResponseCode();
+            System.out.println("http response code = " + code);
+            if(code == 200) {
+                stream = http.getInputStream();
+                result = readString(stream);
+                System.out.println("result = " + result);
+                list = hosApiService.parseXml2(result);
+                
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+
+
     }
 
     public String readString(InputStream stream) throws IOException {

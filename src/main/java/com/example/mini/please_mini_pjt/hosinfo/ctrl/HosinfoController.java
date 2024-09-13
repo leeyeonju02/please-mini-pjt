@@ -48,7 +48,7 @@ public class HosinfoController {
 
     @PostMapping("/save")
     public ResponseEntity<Void> save(@RequestBody HosRequestsDTO params) {
-        System.out.println("client endpoint : /hos/save");
+        System.out.println("client endpoint : /hosinfo/save");
         System.out.println("params : " + params);
         hosinfoService.create(params);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

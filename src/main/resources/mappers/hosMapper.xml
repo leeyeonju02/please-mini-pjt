@@ -8,14 +8,14 @@
     <!-- findAllRow --> 
 
     <select id="findAllRow" resultType="com.example.mini.please_mini_pjt.hosinfo.domain.HosResponseDTO">
-    SELECT ID, DUTYNAME, HPID, DUTYADDR, DUTYTEL FROM HOS_INFO;
+    SELECT ID, DUTYNAME, HPID, DUTYADDR, DUTYTEL, DUTYDIVNAME FROM HOS_INFO;
     </select>
     
 
     <!-- insertRow --> 
 
     <insert id="insertRow" parameterType="com.example.mini.please_mini_pjt.hosinfo.domain.HosRequestsDTO">
-    INSERT INTO HOS_INFO(DUTYNAME, HPID, DUTYADDR, DUTYTEL) VALUES( #{dutyname}, #{hpid}, #{dutyaddr}, #{dutytel});
+    INSERT INTO HOS_INFO(DUTYNAME, HPID, DUTYADDR, DUTYTEL, DUTYDIVNAME) VALUES( #{dutyName}, #{hpid}, #{dutyAddr}, #{dutyTel1}, #{dutyDivName});
     </insert>    
 
     <!-- deleteRow --> 

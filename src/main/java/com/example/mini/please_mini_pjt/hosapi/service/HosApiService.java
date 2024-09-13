@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.example.mini.please_mini_pjt.hosapi.domain.HosDetailDTO;
 import com.example.mini.please_mini_pjt.hosapi.domain.HosItemDTO;
 
 import java.util.ArrayList;
@@ -40,6 +41,39 @@ public class HosApiService {
                     dto.setHpid(getTagValue("hpid", itemElement));
                     dto.setRnum(Integer.parseInt(getTagValue("rnum", itemElement)));
 
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<HosDetailDTO> parseXml2(String xmlData) {
+        List<HosDetailDTO> list = new ArrayList<>();
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new java.io.ByteArrayInputStream(xmlData.getBytes()));
+    
+            NodeList items = doc.getElementsByTagName("item");
+    
+            // 각각의 <item> 노드를 순회하며 DTO로 변환
+            for (int i = 0; i < items.getLength(); i++) {
+                Node itemNode = items.item(i);
+                if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element itemElement = (Element) itemNode;
+    
+                    HosDetailDTO dto = new HosDetailDTO();
+                    dto.setDutyName(getTagValue("dutyName", itemElement));
+                    dto.setDutyTime1s(getTagValue("dutyTime1s", itemElement));
+                    dto.setDutyTime1c(getTagValue("dutyTime1c", itemElement));
+                    dto.setDutyMapping(getTagValue("dutyMapimg", itemElement));
+                    dto.setDutyTel3(getTagValue("dutyTel3", itemElement));
+                    dto.setWgs84Lon(getTagValue("wgs84Lon", itemElement));
+                    dto.setWgs84Lat(getTagValue("wgs84Lat", itemElement));
+    
                     list.add(dto);
                 }
             }
