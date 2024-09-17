@@ -39,7 +39,7 @@ public class HosApiService {
                     dto.setDutyName(getTagValue("dutyName", itemElement));
                     dto.setDutyTel1(getTagValue("dutyTel1", itemElement));
                     dto.setHpid(getTagValue("hpid", itemElement));
-                    dto.setRnum(Integer.parseInt(getTagValue("rnum", itemElement)));
+                    dto.setRnum(parseIntSafely(getTagValue("rnum", itemElement)));
 
                     list.add(dto);
                 }
@@ -85,8 +85,22 @@ public class HosApiService {
 
     // XML 노드에서 태그의 값을 추출하는 헬퍼 메소드
     private String getTagValue(String tag, Element element) {
-        NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
-        Node node = (Node) nodeList.item(0);
-        return node.getNodeValue();
+        NodeList nodeList = element.getElementsByTagName(tag);
+        if (nodeList != null && nodeList.getLength() > 0) {
+            Node node = nodeList.item(0);
+            if (node != null && node.getFirstChild() != null) {
+                return node.getFirstChild().getNodeValue();
+            }
+        }
+        return null; // 태그나 값이 없을 경우 null 반환
+    }
+
+    // 안전하게 문자열을 정수로 변환하는 헬퍼 메소드
+    private int parseIntSafely(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0; // 기본값 반환 또는 로그 출력 가능
+        }
     }
 }
